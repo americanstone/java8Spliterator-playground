@@ -154,7 +154,7 @@ public class Array<E>
 		ensureCapacityInternal(mSize + numNew);  // Increments modCount
 		System.arraycopy(a, 0, mElementData, mSize, numNew);
 		mSize += numNew;
-		mEnd = mSize;
+		mEnd = mSize-1;
 		return numNew != 0;
 	}
 
@@ -178,7 +178,7 @@ public class Array<E>
 		ensureCapacityInternal(mSize + numNew);  // Increments modCount
 		System.arraycopy(a.toArray(), 0, mElementData, mSize, numNew);
 		mSize += numNew;
-		mEnd = mSize;
+		mEnd = mSize-1;
 		return numNew != 0;
 	}
 
@@ -519,6 +519,7 @@ public class Array<E>
 		 * If a remaining element exists, performs the given action on
 		 * it, returning true; else returns false.
 		 */
+		@Override
 		public boolean tryAdvance(Consumer<? super E> action) {
 			// TODO -- you fill in here.
 			if(mIndex > mEnd){
@@ -535,10 +536,11 @@ public class Array<E>
 		 * return from this method, not be covered by this
 		 * Spliterator.
 		 */
+		@Override
 		public ArraySpliterator<E> trySplit() {
 			// TODO -- you fill in here.
 			int lo = mIndex;
-			int mid = ((lo + mEnd) >>> 1) & ~1;
+			int mid = ((lo + mEnd) >>> 1)& ~1;
 			if(lo < mid){
 				mIndex = mid + 1; // reset this Spliterator's origin
 				return new ArraySpliterator<>(mArray, lo, mid);

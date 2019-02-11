@@ -3,8 +3,11 @@ package com.codehub;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 
 import static java.util.stream.Collectors.toList;
@@ -143,6 +146,29 @@ public class ArrayTest2 {
 		for (int i = 0; i < mRandomInput.size(); i++)
 			assertEquals(mRandomInput.get(i),
 					Long.valueOf(array.get(i) - 1));
+	}
+
+	@Test
+	public void testArraySpliteratorTryAdvance(){
+		Array<Long> array = new Array<>();
+		array.addAll(List.of(1L,2L,3L,4L,5L,6L,7L));
+
+		Spliterator<Long> sp = array.spliterator();
+
+		sp.tryAdvance(validation(1L));
+
+
+		sp.forEachRemaining(validation(List.of(2L,3L,4L,5L,6L,7L).iterator()));
+	}
+
+	private Consumer<Long> validation(Long y){
+
+		return l -> assertEquals(l, y);
+	}
+
+	private Consumer<Long> validation(Iterator y){
+
+		return l -> assertEquals(l, y.next());
 	}
 }
 
